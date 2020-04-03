@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 '''
 Gandi v5 LiveDNS - DynDNS Update via REST API and CURL/requests
