@@ -21,10 +21,10 @@ https://dns.api.gandi.net/api/v5/
 api_endpoint = 'https://dns.api.gandi.net/api/v5'
 
 #your domain with the subdomains in the zone file/UUID 
-domain = 'mydomain.tld'
-
-#enter all subdomains to be updated, subdomains must already exist to be updated
-subdomains = ["subdomain1", "subdomain2", "subdomain3"]
+domains = {
+  "mydomain.tld": ["subdomain1", "subdomain2", "subdomain3"],
+  "myotherdomain.tld": ["subdomain1", "subdomain2", "subdomain3"]
+}
 
 #300 seconds = 5 minutes
 ttl = '300'
