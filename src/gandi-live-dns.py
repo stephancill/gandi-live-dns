@@ -51,7 +51,7 @@ def get_uuids():
     '''
     return {get_uuid(domain):domain for domain in config.domains}   
 
-def get_dnsip(uuid, domain):
+def get_dnsip(uuid, domain, subdomain):
     ''' find out IP from first Subdomain DNS-Record
     List all records with name "NAME" and type "TYPE" in the zone UUID
     GET /zones/<UUID>/records/<NAME>/<TYPE>:
@@ -59,12 +59,11 @@ def get_dnsip(uuid, domain):
     The first subdomain from config.subdomain will be used to get   
     the actual DNS Record IP
     '''
-    subdomain = config.domains[domain][0]
     url = config.api_endpoint+ '/zones/' + uuid + '/records/' + subdomain + '/A'
     headers = {"X-Api-Key":config.api_secret}
     u = requests.get(url, headers=headers)
+    json_object = u.json()
     if u.status_code == 200:
-        json_object = u.json()
         print(json_object['rrset_values'][0])
         print('Checking IP from DNS Record' , subdomain, ':', json_object['rrset_values'][0])
         return json_object['rrset_values'][0].strip('\n')
@@ -109,7 +108,6 @@ def main(force_update, verbosity):
 
     for uuid in uuids:
         domain = uuids[uuid]
-        dnsIP = get_dnsip(uuid, domain)
         
         if force_update:
             print("Going to update/create the DNS Records for the subdomains")
@@ -117,12 +115,12 @@ def main(force_update, verbosity):
             for sub in config.domains[domain]:
                 update_records(uuid, dynIP, sub)
         else:
-            if dynIP == dnsIP:
-                print("IP Address Match - no further action")
-            else:
-                print("IP Address Mismatch - going to update the DNS Records for the subdomains with new IP", dynIP)
-                domain = uuids[uuid]
-                for sub in config.domains[domain]:
+            for sub in config.domains[domain]:
+                dnsIP = get_dnsip(uuid, domain, sub)
+                if dynIP == dnsIP:
+                    print("IP Address Match - no further action")
+                else:
+                    print("IP Address Mismatch - going to update the DNS Records for the subdomains with new IP", dynIP)
                     update_records(uuid, dynIP, sub)
 
 if __name__ == "__main__":
