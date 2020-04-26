@@ -88,11 +88,11 @@ def update_records(uuid, dynIP, subdomain):
     json_object = json.loads(u._content)
 
     if u.status_code == 201:
-        print('Status Code:', u.status_code, ',', json_object['message'], ', IP updated for', subdomain)
+        print('Status Code:', u.status_code, ',', json_object.get('message', 'No message key'), ', IP updated for', subdomain)
         return True
     else:
         print('Error: HTTP Status Code ', u.status_code, 'when trying to update IP from subdomain', subdomain)   
-        print(json_object['message'])
+        print(json_object.get('message', 'No message key'))
 
 def main(force_update, verbosity):
 
@@ -121,7 +121,11 @@ def main(force_update, verbosity):
                     print("IP Address Match - no further action")
                 else:
                     print("IP Address Mismatch - going to update the DNS Records for the subdomains with new IP", dynIP)
-                    update_records(uuid, dynIP, sub)
+                    try:
+                        update_records(uuid, dynIP, sub)
+                    except Exception as e:
+                        print("Error", e)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
