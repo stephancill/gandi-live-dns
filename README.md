@@ -49,17 +49,15 @@ http://doc.livedns.gandi.net/#api-endpoint
 api_endpoint = 'https://dns.api.gandi.net/api/v5'
 ```
 
-##### domain
+##### domains
 Your domain for the subdomains to be updated 
 
-
-##### subdomains
-All subdomains which should be updated. They get created if they do not yet exist.
-
 ``` 
-subdomains = ["subdomain1", "subdomain2", "subdomain3"]
+domains = {
+  "mydomain.tld": ["subdomain1", "subdomain2", "subdomain3"],
+  "myotherdomain.tld": ["subdomain1", "subdomain2", "subdomain3"]
+}
 ```
-The first subdomain is used to find out the actual IP in the Zone Records. 
 
 #### Run the script
 And run the script:
