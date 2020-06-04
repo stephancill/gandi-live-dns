@@ -64,7 +64,6 @@ def get_dnsip(uuid, domain, subdomain):
     u = requests.get(url, headers=headers)
     json_object = u.json() or {}
     if u.status_code == 200:
-        print(json_object)
         print(json_object.get('rrset_values', ["No match for subdomain:" + subdomain])[0])
         return json_object.get('rrset_values', [""])[0].strip('\n')
     else:
