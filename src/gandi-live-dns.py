@@ -62,11 +62,11 @@ def get_dnsip(uuid, domain, subdomain):
     url = config.api_endpoint+ '/zones/' + uuid + '/records/' + subdomain + '/A'
     headers = {"X-Api-Key":config.api_secret}
     u = requests.get(url, headers=headers)
-    json_object = u.json()
+    json_object = u.json() or {}
     if u.status_code == 200:
-        print(json_object['rrset_values'][0])
-        print('Checking IP from DNS Record' , subdomain, ':', json_object['rrset_values'][0])
-        return json_object['rrset_values'][0].strip('\n')
+        print(json_object)
+        print(json_object.get('rrset_values', ["No match for subdomain:" + subdomain])[0])
+        return json_object.get('rrset_values', [""])[0].strip('\n')
     else:
         print('Error: HTTP Status Code ', u.status_code, 'when trying to get IP from subdomain', subdomain)   
         print(json_object['message'])
